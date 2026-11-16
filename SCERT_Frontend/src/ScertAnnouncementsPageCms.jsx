@@ -1,0 +1,402 @@
+import { useEffect, useMemo, useState } from 'react';
+import { generatePdfThumbnail } from './utils/pdfThumbnail.js';
+import { buildApiUrl, get, put } from './apiClient.js';
+import { useAuth } from './AuthContext.jsx';
+import { useToast } from './ToastContext.jsx';
+
+const FALLBACK_SECTION = {
+  title: '',
+  subtitle: '',
+  description: '',
+  metadata_json: {
+    items: [],
+  },
+};
+
+function getDisplayFileName(item) {
+  if (item?.file_name) return item.file_name;
+  if (item?.file_url || item?.file_path) {
+    const parts = String(item.file_url || item.file_path).split('/');
+    return parts[parts.length - 1] || 'Uploaded File';
+  }
+  return 'No file uploaded yet';
+}
+
+function TextInput({ label, value, onChange, placeholder = '' }) {
+  return (
+    <label className="cms-field">
+      <span className="cms-field-label">{label}</span>
+      <input
+        type="text"
+        className="cms-input"
+        value={value || ''}
+        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </label>
+  );
+}
+
+function TextArea({ label, value, onChange, rows = 4, placeholder = '' }) {
+  return (
+    <label className="cms-field">
+      <span className="cms-field-label">{label}</span>
+      <textarea
+        className="cms-textarea"
+        rows={rows}
+        value={value || ''}
+        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </label>
+  );
+}
+
+export function ScertAnnouncementsPageCms() {
+  const { auth } = useAuth();
+  const toast = useToast();
+  const [section, setSection] = useState(FALLBACK_SECTION);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [uploadingIndex, setUploadingIndex] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadSection = async () => {
+      try {
+        setLoading(true);
+        const data = await get('/api/scert/cms/page/announcements_page/list', {
+          token: auth.token,
+        });
+        if (mounted) {
+          setSection({
+            ...FALLBACK_SECTION,
+            ...data,
+            metadata_json: data?.metadata_json || { items: [] },
+          });
+        }
+      } catch (err) {
+        toast.error(toast.getErrorMessage(err, 'Failed to load Announcements Page CMS.'));
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    loadSection();
+    return () => {
+      mounted = false;
+    };
+  }, [auth.token]);
+
+  const items = useMemo(() => section?.metadata_json?.items || [], [section]);
+
+  const updateItems = (nextItems) => {
+    setSection((prev) => ({
+      ...prev,
+      metadata_json: {
+        ...(prev.metadata_json || {}),
+        items: nextItems,
+      },
+    }));
+  };
+
+  const addItem = () => {
+    updateItems([
+      ...items,
+      {
+        day: '',
+        month: '',
+        title: '',
+        badge: '',
+        badge_variant: 'notice',
+        description: '',
+        file_name: '',
+        file_path: '',
+        file_url: '',
+      },
+    ]);
+  };
+
+  const updateItemField = (index, field, value) => {
+    updateItems(
+      items.map((item, itemIndex) =>
+        itemIndex === index ? { ...item, [field]: value } : item
+      )
+    );
+  };
+
+  const removeItem = (index) => {
+    updateItems(items.filter((_, itemIndex) => itemIndex !== index));
+  };
+
+  const handleUpload = async (index, file) => {
+    if (!file) return;
+
+    try {
+      setUploadingIndex(index);
+
+      let thumbnailUrl = '';
+      if (file.type === 'application/pdf') {
+        try {
+          const thumbnailBlob = await generatePdfThumbnail(file);
+          if (thumbnailBlob) {
+            const thumbFormData = new FormData();
+            thumbFormData.append('image', thumbnailBlob, 'thumbnail.jpg');
+            thumbFormData.append('page_name', 'announcements_page');
+            thumbFormData.append('section_name', 'items');
+            const thumbRes = await fetch(buildApiUrl('/api/scert/cms/upload-image'), {
+              method: 'POST',
+              headers: { Authorization: `Bearer ${auth.token}` },
+              body: thumbFormData,
+            });
+            const thumbData = await thumbRes.json().catch(() => null);
+            if (thumbRes.ok && thumbData?.image_url) {
+              thumbnailUrl = thumbData.image_url;
+            }
+          }
+        } catch (err) {
+          console.warn('Failed to generate/upload thumbnail', err);
+        }
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('page_name', 'announcements_page');
+      formData.append('section_name', 'items');
+
+      const res = await fetch(buildApiUrl('/api/scert/cms/upload-file'), {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+        body: formData,
+      });
+
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        throw new Error(data?.message || 'Failed to upload file.');
+      }
+      if (!data?.file_path || !data?.file_url) {
+        throw new Error('Upload completed but file URL was not returned by the server.');
+      }
+
+      setSection((prev) => {
+        const prevItems = prev?.metadata_json?.items || [];
+        return {
+          ...prev,
+          metadata_json: {
+            ...(prev.metadata_json || {}),
+            items: prevItems.map((item, itemIndex) =>
+              itemIndex === index
+                ? {
+                    ...item,
+                    file_name: data.file_name || file.name,
+                    file_path: data.file_path || '',
+                    file_url: data.file_url || '',
+                    thumbnail_url: thumbnailUrl || (file.type.startsWith('image/') ? data.file_url : ''),
+                  }
+                : item
+            ),
+          },
+        };
+      });
+      toast.success('File uploaded successfully.');
+    } catch (err) {
+      toast.error(toast.getErrorMessage(err, 'Failed to upload file.'));
+    } finally {
+      setUploadingIndex(null);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      const data = await put(
+        '/api/scert/cms/page/announcements_page/list',
+        {
+          title: section.title || '',
+          subtitle: section.subtitle || '',
+          description: section.description || '',
+          image_path: null,
+          button_text: '',
+          button_link: '',
+          metadata_json: {
+            items,
+          },
+        },
+        { token: auth.token }
+      );
+
+      setSection({
+        ...FALLBACK_SECTION,
+        ...data.section,
+        metadata_json: data?.section?.metadata_json || { items: [] },
+      });
+      toast.success('Announcements page updated successfully.');
+    } catch (err) {
+      toast.error(toast.getErrorMessage(err, 'Failed to update Announcements page.'));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="cms-page">
+        <div className="cms-panel">
+          <div className="cms-loading">Loading Announcements Page CMS...</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="cms-page">
+      <div className="cms-page-header">
+        <div>
+          <h1 className="cms-page-title">Announcements Page CMS</h1>
+          <p className="cms-page-subtitle">
+            Manage the text announcements shown on the public Announcements page.
+          </p>
+        </div>
+      </div>
+
+      <section className="cms-panel">
+        <div className="cms-panel-top">
+          <div>
+            <h2 className="cms-panel-title">Page Content</h2>
+            <p className="cms-panel-note">
+              Update the heading and add announcement entries below.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className="cms-save-btn"
+            onClick={handleSave}
+            disabled={saving || uploadingIndex !== null}
+          >
+            {saving ? 'Saving...' : 'Save / Update'}
+          </button>
+        </div>
+
+        <div className="cms-grid cms-grid--2">
+          <TextInput
+            label="Page Title"
+            value={section.title}
+            onChange={(value) => setSection((prev) => ({ ...prev, title: value }))}
+            placeholder="Announcements"
+          />
+          <TextInput
+            label="Page Subtitle"
+            value={section.subtitle}
+            onChange={(value) => setSection((prev) => ({ ...prev, subtitle: value }))}
+            placeholder="Latest notices, results, and circular updates"
+          />
+        </div>
+
+        <div className="cms-repeatable">
+          <div className="cms-repeatable-header">
+            <h3 className="cms-block-title">Announcement Items</h3>
+            <button type="button" className="cms-mini-btn" onClick={addItem}>
+              Add Item
+            </button>
+          </div>
+
+          {items.length === 0 ? (
+            <div className="cms-empty-state">No announcement items added yet.</div>
+          ) : null}
+
+          {items.map((item, index) => (
+            <div key={`announcement-item-${index}`} className="cms-repeatable-card">
+              <div className="cms-repeatable-toolbar">
+                <span className="cms-item-index">Item {index + 1}</span>
+                <button
+                  type="button"
+                  className="cms-danger-btn"
+                  onClick={() => removeItem(index)}
+                >
+                  Remove
+                </button>
+              </div>
+
+              <div className="cms-grid cms-grid--2">
+                <TextInput
+                  label="Day"
+                  value={item.day}
+                  onChange={(value) => updateItemField(index, 'day', value)}
+                  placeholder="24"
+                />
+                <TextInput
+                  label="Month"
+                  value={item.month}
+                  onChange={(value) => updateItemField(index, 'month', value)}
+                  placeholder="MAR"
+                />
+                <TextInput
+                  label="Title"
+                  value={item.title}
+                  onChange={(value) => updateItemField(index, 'title', value)}
+                  placeholder="Announcement title"
+                />
+                <TextInput
+                  label="Badge"
+                  value={item.badge}
+                  onChange={(value) => updateItemField(index, 'badge', value)}
+                  placeholder="Notice"
+                />
+                <label className="cms-field">
+                  <span className="cms-field-label">Badge Variant</span>
+                  <select
+                    className="cms-select"
+                    value={item.badge_variant || 'notice'}
+                    onChange={(e) => updateItemField(index, 'badge_variant', e.target.value)}
+                  >
+                    <option value="notice">Notice</option>
+                    <option value="results">Results</option>
+                    <option value="circular">Circular</option>
+                  </select>
+                </label>
+              </div>
+
+              <TextArea
+                label="Description"
+                value={item.description}
+                onChange={(value) => updateItemField(index, 'description', value)}
+                rows={3}
+                placeholder="Optional announcement details"
+              />
+
+              <div className="cms-upload-box" style={{ marginTop: '1rem' }}>
+                <div className="cms-upload-meta">
+                  <span className="cms-upload-filename">{getDisplayFileName(item)}</span>
+                  {item.file_url || item.file_path ? (
+                    <a
+                      href={buildApiUrl(item.file_url || item.file_path)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cms-upload-link"
+                    >
+                      Preview File
+                    </a>
+                  ) : null}
+                </div>
+
+                <label className="cms-upload-btn">
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    hidden
+                    onChange={(e) => handleUpload(index, e.target.files?.[0])}
+                  />
+                  {uploadingIndex === index ? 'Uploading...' : 'Upload File'}
+                </label>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}

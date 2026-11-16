@@ -1,0 +1,175 @@
+{
+  "almora": {
+    "district_code": "01",
+    "district_name": "Almora",
+    "blocks": {
+      "bhaisiyachhana": { "block_code": "01", "block_name": "Bhaisiyachhana" },
+      "bhikiyasain": { "block_code": "02", "block_name": "Bhikiyasain" },
+      "chaukhutiya": { "block_code": "03", "block_name": "Chaukhutiya" },
+      "dhauladevi": { "block_code": "04", "block_name": "Dhauladevi" },
+      "dwarahat": { "block_code": "05", "block_name": "Dwarahat" },
+      "hawalbag": { "block_code": "06", "block_name": "Hawalbag" },
+      "lamgarah": { "block_code": "07", "block_name": "Lamgarah" },
+      "salt": { "block_code": "08", "block_name": "Salt" },
+      "syaldey": { "block_code": "09", "block_name": "Syaldey" },
+      "takula": { "block_code": "10", "block_name": "Takula" },
+      "tarikhet": { "block_code": "11", "block_name": "Tarikhet" }
+    }
+  },
+  "bageshwar": {
+    "district_code": "02",
+    "district_name": "Bageshwar",
+    "blocks": {
+      "bageshwar": { "block_code": "12", "block_name": "Bageshwar" },
+      "garur": { "block_code": "13", "block_name": "Garur" },
+      "Kapkote": { "block_code": "14", "block_name": "Kapkote" }
+    }
+  },
+  "chamoli": {
+    "district_code": "03",
+    "district_name": "Chamoli",
+    "blocks": {
+      "dasholi": { "block_code": "15", "block_name": "Dasholi" },
+      "dewal": { "block_code": "16", "block_name": "Dewal" },
+      "gairsain": { "block_code": "17", "block_name": "Gairsain" },
+      "joshimath": { "block_code": "18", "block_name": "Joshimath" },
+      "karanprayag": { "block_code": "19", "block_name": "Karanprayag" },
+      "nandanagar": { "block_code": "20", "block_name": "Nandanagar" },
+      "narayanbagar": { "block_code": "21", "block_name": "Narayanbagar" },
+      "pokhari": { "block_code": "22", "block_name": "Pokhari" },
+      "tharali": { "block_code": "23", "block_name": "Tharali" }
+    }
+  },
+  "champawat": {
+    "district_code": "04",
+    "district_name": "Champawat",
+    "blocks": {
+      "barakot": { "block_code": "24", "block_name": "Barakot" },
+      "champawat": { "block_code": "25", "block_name": "Champawat" },
+      "lohaghat": { "block_code": "26", "block_name": "Lohaghat" },
+      "pati": { "block_code": "27", "block_name": "Pati" }
+    }
+  },
+  "dehradun": {
+    "district_code": "05",
+    "district_name": "Dehradun",
+    "blocks": {
+      "Chakrata": { "block_code": "28", "block_name": "Chakrata" },
+      "doiwala": { "block_code": "29", "block_name": "Doiwala" },
+      "kalsi": { "block_code": "30", "block_name": "Kalsi" },
+      "raipur": { "block_code": "31", "block_name": "Raipur" },
+      "sahaspur": { "block_code": "32", "block_name": "Sahaspur" },
+      "vikasnagar": { "block_code": "33", "block_name": "Vikasnagar" }
+    }
+  },
+  "hardwar": {
+    "district_code": "06",
+    "district_name": "Hardwar",
+    "blocks": {
+      "bahadarabad": { "block_code": "34", "block_name": "Bahadarabad" },
+      "bhagwanpur": { "block_code": "35", "block_name": "Bhagwanpur" },
+      "khanpur": { "block_code": "36", "block_name": "Khanpur" },
+      "laksar": { "block_code": "37", "block_name": "Laksar" },
+      "narsan": { "block_code": "38", "block_name": "Narsan" },
+      "roorkee": { "block_code": "39", "block_name": "Roorkee" }
+    }
+  },
+  "nainital": {
+    "district_code": "07",
+    "district_name": "Nainital",
+    "blocks": {
+      "betaalghat": { "block_code": "40", "block_name": "Betaalghat" },
+      "bhimtal": { "block_code": "41", "block_name": "Bhimtal" },
+      "dhari": { "block_code": "42", "block_name": "Dhari" },
+      "haldwani": { "block_code": "43", "block_name": "Haldwani" },
+      "kotabagh": { "block_code": "44", "block_name": "Kotabagh" },
+      "okhalkanda": { "block_code": "45", "block_name": "Okhalkanda" },
+      "ramgarh": { "block_code": "46", "block_name": "Ramgarh" },
+      "ramnagar": { "block_code": "47", "block_name": "Ramnagar" }
+    }
+  },
+  "Pauri": {
+    "district_code": "08",
+    "district_name": "Pauri",
+    "blocks": {
+      "bironkhal": { "block_code": "48", "block_name": "Bironkhal" },
+      "dugadda": { "block_code": "49", "block_name": "Dugadda" },
+      "dwarikahl": { "block_code": "50", "block_name": "Dwarikahl" },
+      "ekeshwar": { "block_code": "51", "block_name": "Ekeshwar" },
+      "jaiharikhal": { "block_code": "52", "block_name": "Jaiharikhal" },
+      "kaljikhal": { "block_code": "53", "block_name": "Kaljikhal" },
+      "khirsu": { "block_code": "54", "block_name": "Khirsu" },
+      "kot": { "block_code": "55", "block_name": "Kot" },
+      "nainidanda": { "block_code": "56", "block_name": "Nainidanda" },
+      "pabau": { "block_code": "57", "block_name": "Pabau" },
+      "pauri": { "block_code": "58", "block_name": "Pauri" },
+      "pokhra": { "block_code": "59", "block_name": "Pokhra" },
+      "rikhanikhal": { "block_code": "60", "block_name": "Rikhanikhal" },
+      "thalisain": { "block_code": "61", "block_name": "Thalisain" },
+      "yamkeshwar": { "block_code": "62", "block_name": "Yamkeshwar" }
+    }
+  },
+  "pithoragarh": {
+    "district_code": "09",
+    "district_name": "Pithoragarh",
+    "blocks": {
+      "berinag": { "block_code": "63", "block_name": "Berinag" },
+      "bin": { "block_code": "64", "block_name": "Bin" },
+      "dharchula": { "block_code": "65", "block_name": "Dharchula" },
+      "didihat": { "block_code": "66", "block_name": "Didihat" },
+      "gangolihat": { "block_code": "67", "block_name": "Gangolihat" },
+      "kanalichheena": { "block_code": "68", "block_name": "Kanalichheena" },
+      "moonakot": { "block_code": "69", "block_name": "Moonakot" },
+      "munsyari": { "block_code": "70", "block_name": "Munsyari" }
+    }
+  },
+  "rudraprayag": {
+    "district_code": "10",
+    "district_name": "Rudraprayag",
+    "blocks": {
+      "augustyamuni": { "block_code": "71", "block_name": "Augustyamuni" },
+      "jakholi": { "block_code": "72", "block_name": "Jakholi" },
+      "ukhimath": { "block_code": "73", "block_name": "Ukhimath" }
+    }
+  },
+  "tehri garhwal": {
+    "district_code": "11",
+    "district_name": "Tehri Garhwal",
+    "blocks": {
+      "bhilangana": { "block_code": "74", "block_name": "Bhilangana" },
+      "chamba": { "block_code": "75", "block_name": "Chamba" },
+      "devprayag": { "block_code": "76", "block_name": "Devprayag" },
+      "jakhnidhar": { "block_code": "77", "block_name": "Jakhnidhar" },
+      "jounpur": { "block_code": "78", "block_name": "Jounpur" },
+      "keertinagar": { "block_code": "79", "block_name": "Keertinagar" },
+      "narendranagar": { "block_code": "80", "block_name": "Narendranagar" },
+      "pratapnagar": { "block_code": "81", "block_name": "Pratapnagar" },
+      "thouldhar": { "block_code": "82", "block_name": "Thouldhar" }
+    }
+  },
+  "udham singh nagar": {
+    "district_code": "12",
+    "district_name": "Udham Singh Nagar",
+    "blocks": {
+      "bazpur": { "block_code": "83", "block_name": "Bazpur" },
+      "gadarpur": { "block_code": "84", "block_name": "Gadarpur" },
+      "jaspur": { "block_code": "85", "block_name": "Jaspur" },
+      "kashipur": { "block_code": "86", "block_name": "Kashipur" },
+      "khatima": { "block_code": "87", "block_name": "Khatima" },
+      "rudrapur": { "block_code": "88", "block_name": "Rudrapur" },
+      "sitarganj": { "block_code": "89", "block_name": "Sitarganj" }
+    }
+  },
+  "uttarkashi": {
+    "district_code": "13",
+    "district_name": "Uttarkashi",
+    "blocks": {
+      "bhatwari": { "block_code": "90", "block_name": "Bhatwari" },
+      "chinyalisaur": { "block_code": "91", "block_name": "Chinyalisaur" },
+      "dunda": { "block_code": "92", "block_name": "Dunda" },
+      "mori": { "block_code": "93", "block_name": "Mori" },
+      "naugaon": { "block_code": "94", "block_name": "Naugaon" },
+      "purola": { "block_code": "95", "block_name": "Purola" }
+    }
+  }
+}

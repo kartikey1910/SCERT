@@ -1,0 +1,68 @@
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #0b1220;
+  background-color: #ffffff;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #ffffff;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: Matter Regular, inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.badge-submitted {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    margin-left: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    vertical-align: middle;
+}
+
+.badge-submitted-school {
+    background-color: #E0E7FF;
+    color: #4338CA;
+    border: 1px solid #C7D2FE;
+}
+
+.badge-submitted-student {
+    background-color: #DCFCE7;
+    color: #15803D;
+    border: 1px solid #BBF7D0;
+}
+
+
+tr.row-submitted-school > td {
+    background-color: #eef2ff !important;
+}
+
+tr.row-submitted-student > td {
+    background-color: #f0fdf4 !important;
+}
